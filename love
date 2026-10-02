@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>For My Favorite Person ✨</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        body {
+            background: linear-gradient(135deg, #0f0c20, #1a103c, #2b0b3a);
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow-x: hidden;
+            padding: 20px;
+        }
+
+        /* --- HEARTS BACKGROUND --- */
+        .hearts-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .heart-particle {
+            position: absolute;
+            color: rgba(255, 105, 180, 0.3);
+            font-size: 20px;
+            animation: floatUp 8s infinite linear;
+        }
+
+        @keyframes floatUp {
+            0% { transform: translateY(100vh) scale(0.5); opacity: 0; }
+            50% { opacity: 0.8; }
+            100% { transform: translateY(-10vh) scale(1.2); opacity: 0; }
+        }
+
+        /* --- STEP 1: CAT INTRO CARD --- */
+        .intro-card {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 40px 25px;
+            max-width: 450px;
+            width: 100%;
+            text-align: center;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            z-index: 2;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .intro-gif {
+            width: 160px;
+            height: 160px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            border-radius: 16px;
+        }
+
+        .intro-title {
+            font-size: 2rem;
+            color: #ff75a0;
+            letter-spacing: 2px;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+
+        .intro-subtitle {
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            letter-spacing: 1px;
+            margin-bottom: 25px;
+            text-transform: uppercase;
+        }
+
+        .intro-btns {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .icon-btn {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-cross { background: #ff4d4d; color: white; box-shadow: 0 4px 15px rgba(255, 77, 77, 0.4); }
+        .btn-check { background: #ff75a0; color: white; box-shadow: 0 4px 15px rgba(255, 117, 160, 0.4); }
+        .icon-btn:hover { transform: scale(1.12); }
+
+        /* --- STEP 2: MAIN STORY PAGE --- */
+        .main-content {
+            display: none;
+            opacity: 0;
+            transition: opacity 0.8s ease;
+            width: 100%;
+            max-width: 550px;
+            z-index: 1;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.07);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            border-radius: 24px;
+            padding: 35px 25px;
+            width: 100%;
+            margin: 20px 0;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            text-align: center;
+        }
+
+        .main-cat-gif {
+            width: 140px;
+            height: 140px;
+            object-fit: contain;
+            margin: 0 auto 15px auto;
+            display: block;
+            border-radius: 16px;
+        }
+
+        h1 { font-size: 2rem; color: #ff75a0; margin-bottom: 15px; }
+        p.intro { font-size: 1rem; line-height: 1.6; color: #e2e8f0; margin-bottom: 20px; }
+
+        .timeline { text-align: left; margin: 20px 0; border-left: 2px solid #ff75a0; padding-left: 20px; }
+        .timeline-item { margin-bottom: 15px; position: relative; }
+        .timeline-item::before { content: '🌸'; position: absolute; left: -31px; top: 0; background: #1a103c; border-radius: 50%; font-size: 14px; }
+        .timeline-date { font-size: 0.85rem; color: #ff75a0; font-weight: bold; }
+        .timeline-text { font-size: 0.9rem; color: #cbd5e1; margin-top: 4px; }
+
+        .question-box {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .question-box h2 { font-size: 1.3rem; color: #ffffff; margin-bottom: 20px; }
+
+        .retro-btn {
+            background: #e2e8f0;
+            color: #0f172a;
+            border: 2px solid #000;
+            padding: 10px 24px;
+            font-weight: bold;
+            font-size: 1rem;
+            cursor: pointer;
+            box-shadow: 3px 3px 0px #000;
+            margin: 5px;
+            transition: all 0.2s ease;
+        }
+        .retro-btn:active { transform: translate(2px, 2px); box-shadow: 1px 1px 0px #000; }
+
+        /* --- STEP 3: RETRO POPUPS --- */
+        .window {
+            background: #e2e8f0;
+            color: #0f172a;
+            border: 3px solid #1e293b;
+            box-shadow: 6px 6px 0px #000;
+            border-radius: 8px;
+            width: 320px;
+            padding: 20px;
+            text-align: center;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 100;
+        }
+
+        .window-header {
+            background: #3b82f6;
+            color: white;
+            padding: 4px 8px;
+            margin: -20px -20px 15px -20px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+            font-weight: bold;
+            font-size: 0.9rem;
+            text-align: left;
+        }
+
+        .window-content { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+        .window-icon { font-size: 2.5rem; }
+
+        /* --- STEP 4: LOADING BAR --- */
+        .progress-container {
+            width: 100%;
+            background-color: #cbd5e1;
+            border: 2px solid #0f172a;
+            height: 25px;
+            margin-top: 15px;
+        }
+
+        .progress-bar {
+            width: 0%;
+            height: 100%;
+            background-color: #3b82f6;
+            transition: width 0.3s ease;
+        }
+
+        /* --- STEP 5: DIGITAL LOVE DESKTOP --- */
+        .desktop {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
+            background: linear-gradient(135deg, #0f0c20, #1a103c, #2b0b3a);
+            z-index: 200;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .desktop-title {
+            font-size: 2.8rem;
+            color: #ffffff;
+            text-shadow: 4px 4px 0px #000;
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+
+        .icon-grid { display: flex; gap: 30px; }
+
+        .app-icon {
+            background: #ffffff;
+            border: 3px solid #000;
+            box-shadow: 5px 5px 0px #000;
+            border-radius: 12px;
+            width: 110px; height: 110px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .app-icon:hover { transform: scale(1.08); }
+        .app-icon span { font-size: 2.5rem; }
+        .app-icon p { color: #000; font-size: 0.9rem; font-weight: bold; margin-top: 5px; }
+
+        /* LETTER MODAL & INTERACTIVE QUESTION */
+        .app-modal {
+            display: none;
+            position: fixed;
+            top: 50%; left: 50%;
+            transform: translate(-50%, -50%);
+            background: #f8fafc;
+            color: #0f172a;
+            border: 3px solid #000;
+            box-shadow: 8px 8px 0px #000;
+            border-radius: 12px;
+            padding: 25px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 85vh;
+            overflow-y: auto;
+            z-index: 300;
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px; right: 15px;
+            background: #ef4444; color: white;
+            border: 2px solid #000;
+            font-weight: bold; cursor: pointer;
+            padding: 2px 8px;
+        }
+
+        .letter-content {
+            font-size: 0.95rem;
+            line-height: 1.6;
+            margin-top: 15px;
+            text-align: left;
+            white-space: pre-line;
+        }
+
+        .proposal-container {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px dashed #ff75a0;
+            text-align: center;
+        }
+
+        .proposal-title {
+            font-size: 1.2rem;
+            color: #0f172a;
+            font-weight: bold;
+            margin-bottom: 15px;
+        }
+
+        .proposal-feedback {
+            font-size: 0.9rem;
+            color: #ef4444;
+            font-weight: bold;
+            min-height: 24px;
+            margin-bottom: 10px;
+        }
+
+        .btn-yes {
+            background: #ff75a0 !important;
+            color: white !important;
+        }
+
+        .final-declaration {
+            display: none;
+            margin-top: 20px;
+            padding: 20px;
+            background: rgba(255, 117, 160, 0.15);
+            border: 2px solid #ff75a0;
+            border-radius: 12px;
+            text-align: left;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: #0f172a;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="hearts-container" id="hearts"></div>
+
+    <!-- STEP 1: CAT INTRO CARD -->
+    <div class="intro-card" id="introCard">
+        <img src="cat-happy.gif" alt="Cute Cat" class="intro-gif" id="introGif">
+        <div class="intro-title" id="introTitle">HEY BABY!</div>
+        <div class="intro-subtitle" id="introSubtitle">WOULD YOU LIKE TO SEE SOMETHING?</div>
+        
+        <div class="intro-btns" id="introBtns">
+            <button class="icon-btn btn-cross" onclick="showSadScreen()">✖</button>
+            <button class="icon-btn btn-check" onclick="openGift()">✔</button>
+        </div>
+    </div>
+
+    <!-- STEP 2: MAIN STORY PAGE -->
+    <div class="main-content" id="mainContent">
+        <div class="card">
+            <img src="cat-happy.gif" alt="Cute Cat" class="main-cat-gif">
+            <h1>For My Pretty Girl YAKINE 💖</h1>
+            <p class="intro">Even though we already made it official over texts, I wanted to build this little space just for us to remind you how much you mean to me. </p>
+<p> I was already working on this for you and i still wanted you to have it </p>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-date">Day 1</div>
+                    <div class="timeline-text">The day we started talking. I had no idea my world was about to change so much.</div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-date">Our First Meeting</div>
+                    <div class="timeline-text">Walking together, holding hands, Being with you felt like home.</div>
+                </div>
+              
+            </div>
+
+            <div class="question-box">
+                <h2>Can you please open this? 💖</h2>
+                <button class="retro-btn" onclick="startLoading()">Yes</button>
+                <button class="retro-btn" onclick="triggerError1()">No</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 3: ERROR POPUP 1 -->
+    <div class="window" id="windowError1" style="display: none;">
+        <div class="window-header" style="background: #eab308;"><span>OOPS ERROR!</span></div>
+        <div class="window-content">
+            <div class="window-icon">⚠️</div>
+            <p><strong>OOPS ERROR!</strong><br>Open it, please.</p>
+            <div>
+                <button class="retro-btn" onclick="startLoading()">Start</button>
+                <button class="retro-btn" onclick="triggerError2()">Ignore</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 3: ERROR POPUP 2 -->
+    <div class="window" id="windowError2" style="display: none;">
+        <div class="window-header" style="background: #ef4444;"><span>WARNING</span></div>
+        <div class="window-content">
+            <div class="window-icon">😭</div>
+            <p><strong>Are you sure about that?</strong><br>Give me a chance.</p>
+            <div>
+                <button class="retro-btn" onclick="startLoading()">Ok</button>
+                <button class="retro-btn" onclick="startLoading()">Yes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 4: LOADING WINDOW -->
+    <div class="window" id="windowLoading" style="display: none;">
+        <div class="window-header"><span>Loading...</span></div>
+        <div class="window-content">
+            <h3>OPENING TO MY HEART'S CORNER...</h3>
+            <div class="progress-container">
+                <div class="progress-bar" id="progressBar"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- STEP 5: DIGITAL LOVE DESKTOP -->
+    <div class="desktop" id="desktop">
+        <h1 class="desktop-title">MY HEART CORNER</h1>
+        
+        <div class="icon-grid">
+            <div class="app-icon" onclick="openModal('letterModal')">
+                <span>✉️</span>
+                <p>Letter</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: LETTER & INTERACTIVE PROPOSAL -->
+    <div class="app-modal" id="letterModal">
+        <button class="modal-close" onclick="closeModal('letterModal')">X</button>
+        <h2>Letter 💌</h2>
+        <div class="letter-content">
+YAKINE,
+
+I don't really have a reason for writing this—it just felt like it. Sometimes, you pop into my mind out of nowhere, and it makes me smile. 
+
+You have this way of making things feel a little lighter, even without trying. I guess I just wanted to say that I appreciate you, and I care about you more than ANYTHING .
+
+
+Thank you for being here with me. ❤️
+        </div>
+
+        <!-- INTERACTIVE QUESTION SECTION -->
+        <div class="proposal-container" id="proposalBox">
+            <div class="proposal-title">Will you officially be my girlfriend? 🥺❤️</div>
+            <div class="proposal-feedback" id="proposalFeedback"></div>
+            <div>
+                <button class="retro-btn btn-yes" id="btnYesProposal" onclick="acceptProposal()">Yes!</button>
+                <button class="retro-btn" id="btnNoProposal" onclick="rejectProposal()">No</button>
+            </div>
+        </div>
+
+        <!-- FINAL DECLARATION ON YES -->
+        <div class="final-declaration" id="finalDeclaration">
+            <strong>My Babyyy,</strong><br><br>
+            You mean the absolute world to me. and every single moment with you feels like a gift. I can’t wait to spend my time with you, build amazing memories together, Every single moment I spend with you is somethingi genuinely enjoy 
+            AND I WANNA MENTION HOW MUCH I ADORE YOUR SMILE AND EYES LIKE OMG GIRL HAVE MERCY ON ME , it honestly brightens up my whole day every single time i see it 💖✨
+I also want you to know, no matter what happens, I’m always here for you. You can text me, call me, or reach out whenever you want, whether you just want to talk, laugh, or vent—I’m always going to be by your side. I care deeply about your feelings, and I promise to always treat them with the love and gentleness you deserve.
+        </div>
+    </div>
+
+    <script>
+        // Hearts generator
+        const heartsContainer = document.getElementById('hearts');
+        const heartSymbols = ['💖', '🌸', '✨', '💕', '💗'];
+        for (let i = 0; i < 25; i++) {
+            const heart = document.createElement('div');
+            heart.classList.add('heart-particle');
+            heart.innerText = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+            heart.style.left = Math.random() * 100 + 'vw';
+            heart.style.animationDuration = (Math.random() * 5 + 5) + 's';
+            heart.style.animationDelay = (Math.random() * 5) + 's';
+            heartsContainer.appendChild(heart);
+        }
+
+        // Cat Intro Actions
+        function showSadScreen() {
+            document.getElementById('introGif').src = "cat-sad.gif";
+            document.getElementById('introTitle').innerText = "AW PLEASE?";
+            document.getElementById('introSubtitle').innerText = "I PROMISE ITS WORTH IT ";
+            document.getElementById('introBtns').innerHTML = `
+                <button class="icon-btn btn-check" onclick="resetIntro()">↩</button>
+            `;
+        }
+
+        function resetIntro() {
+            document.getElementById('introGif').src = "cat-happy.gif";
+            document.getElementById('introTitle').innerText = "HEY BABY!";
+            document.getElementById('introSubtitle').innerText = "WOULD YOU LIKE TO SEE YOUR GIFT?";
+            document.getElementById('introBtns').innerHTML = `
+                <button class="icon-btn btn-cross" onclick="showSadScreen()">✖</button>
+                <button class="icon-btn btn-check" onclick="openGift()">✔</button>
+            `;
+        }
+
+        function openGift() {
+            const introCard = document.getElementById('introCard');
+            const mainContent = document.getElementById('mainContent');
+            introCard.style.opacity = '0';
+            introCard.style.transform = 'scale(0.8)';
+            setTimeout(() => {
+                introCard.style.display = 'none';
+                mainContent.style.display = 'block';
+                setTimeout(() => { mainContent.style.opacity = '1'; }, 50);
+            }, 500);
+        }
+
+        // Popups & Loading Flow
+        function triggerError1() {
+            document.getElementById('windowError1').style.display = 'block';
+        }
+
+        function triggerError2() {
+            document.getElementById('windowError2').style.display = 'block';
+        }
+
+        function startLoading() {
+            document.getElementById('windowError1').style.display = 'none';
+            document.getElementById('windowError2').style.display = 'none';
+            
+            const loadingWindow = document.getElementById('windowLoading');
+            loadingWindow.style.display = 'block';
+
+            let progress = 0;
+            const progressBar = document.getElementById('progressBar');
+            
+            const interval = setInterval(() => {
+                progress += 10;
+                progressBar.style.width = progress + '%';
+                
+                if (progress >= 100) {
+                    clearInterval(interval);
+                    setTimeout(() => {
+                        loadingWindow.style.display = 'none';
+                        document.getElementById('mainContent').style.display = 'none';
+                        showDesktop();
+                    }, 400);
+                }
+            }, 150);
+        }
+
+        function showDesktop() {
+            document.getElementById('desktop').style.display = 'flex';
+        }
+
+        function openModal(id) { document.getElementById(id).style.display = 'block'; }
+        function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+
+        // Dynamic Yes/No proposal logic inside the letter modal
+        let yesScale = 1;
+        let noScale = 1;
+        const feedbackMessages = [
+            "Try again... 🥺",
+            "Wrong answer! Try again! 😜",
+            "Are you really sure? Look how big Yes is! 👀",
+            "Nice try, but you have to click Yes! 💕",
+            "Resistance is futile! Press Yes! 🥰"
+        ];
+        let msgIndex = 0;
+
+        function rejectProposal() {
+            yesScale += 0.35;
+            noScale = Math.max(0.3, noScale - 0.15);
+
+            const btnYes = document.getElementById('btnYesProposal');
+            const btnNo = document.getElementById('btnNoProposal');
+            const feedback = document.getElementById('proposalFeedback');
+
+            btnYes.style.transform = `scale(${yesScale})`;
+            btnNo.style.transform = `scale(${noScale})`;
+
+            feedback.innerText = feedbackMessages[msgIndex % feedbackMessages.length];
+            msgIndex++;
+        }
+
+        function acceptProposal() {
+            document.getElementById('proposalBox').style.display = 'none';
+            document.getElementById('finalDeclaration').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
